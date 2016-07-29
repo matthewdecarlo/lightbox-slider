@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lightbox</title>
+  <meta name="description" content="A Simple Lightbox Demo">
+  <meta name="author" content="Matthew DeCarlo">
+
+  <style>
+    /*normalize*/
+    html, body {
+      height: 100%;
+    }
+
+    body{
+      margin: 0;
+    }
+
+    .container {
+      align-items: center;
+      background-color: rgba(238, 241, 239, 1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      margin: 0;
+      min-height: min-content;
+      padding: 0;
+    }
+
+    .container .image-container {
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+      margin: 20px;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .container .image-container:hover {
+      box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.3),
+        0 4px 3px 0 rgba(0, 0, 0, 0.19);
+      transform: scale(1.009);
+    }
+
+    .container .image-container img {
+      transition: all 0.4s ease-in-out;
+    }
+
+    .container .image-container img:hover {
+      cursor: zoom-in;
+      transform: scale(1.1);
+    }
+
+    .lightbox {
+      align-items: center;
+      background-color: rgba(37, 38, 34, 0.6);
+      display: none;
+      justify-content: center;
+      margin: 0;
+      min-height: 100%;
+      min-width: 100%;
+      padding: 0;
+      position: fixed;
+      top: 0;
+    }
+
+    .lightbox .image-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .lightbox .close {
+      align-self: flex-start;
+      background-color: rgba(238, 241, 239, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+      color: rgba(37, 38, 34, 1);
+      font-family: sans-serif;
+      font-size: 1.25em;
+      font-weight: bold;
+      height: 1.5em;
+      line-height: 1.5em;
+      margin: -2px -60px 2px 60px;
+      position: relative;
+      text-align: center;
+      transition: all 0.4s ease-in-out;
+      width: 1.5em;
+    }
+
+    .lightbox .close:hover {
+      box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.3),
+        0 4px 2px 0 rgba(0, 0, 0, 0.19);
+      cursor: pointer;
+    }
+
+    .lightbox .left {
+      background-color: rgba(238, 241, 239, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+      color: rgba(37, 38, 34, 1);
+      font-size: 45px;
+      font-weight: bold;
+      height: 50px;
+      line-height: 0.9em;
+      margin: 30% 100px 0 0;
+      padding: 15px 25px 0 0;
+      text-align: center;
+      width: 40px;
+    }
+
+    .lightbox .right {
+      background-color: rgba(238, 241, 239, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+      color: rgba(37, 38, 34, 1);
+      font-size: 45px;
+      font-weight: bold;
+      height: 50px;
+      line-height: 0.9em;
+      margin: 30% 0 0 75px;
+      padding: 15px 0 0 25px;
+      text-align: center;
+      width: 40px;
+    }
+
+    .lightbox .right:hover {
+      box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.3),
+        0 4px 2px 0 rgba(0, 0, 0, 0.19);
+      cursor: pointer;
+    }
+
+    .lightbox .left:hover {
+      box-shadow: 0 0px 14px 2px rgba(0, 0, 0, 0.3),
+        0 4px 2px 0 rgba(0, 0, 0, 0.19);
+      cursor: pointer;
+
+    }
+
+    .lightbox img {
+      padding: 60px 0 0 -0px;
+      transform: scale(1.25);
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class='container'></div>
+  <div class='lightbox'></div>
+</div>
+
+    
+  <script>
+  var lightbox = document.getElementsByClassName('lightbox')[0];
+
+  var addImage = function(id) {
+    var container = document.getElementsByClassName('container')[0]
+    container.innerHTML += image(id);
+  }
+
+  var image = function(id) {
+    return (
+      "<div class='image-container'>\
+        <img src='https://placeimg.com/640/480/animals/" + id + "'>\
+      </div>"
+     );
+  }
+
+  var displayLightbox = function(lightbox_image) {
+    lightbox.innerHTML += lightboxImage(lightbox_image)
+
+    lightbox.style.display = 'flex'
+
+    var left = document.getElementsByClassName('left')[0]
+    var right = document.getElementsByClassName('right')[0]
+
+
+    left.addEventListener('click', function() {
+      var imageLeft = images.splice(0,1)
+      images = images.concat(imageLeft)
+      resetImage(imageLeft[0]);
+    })
+
+    right.addEventListener('click', function() {
+      var imageRight = images.splice(-1,1)
+      images = imageRight.concat(images)
+      resetImage(imageRight[0]);
+    })
+
+    closeButton();
+  }
+
+  var resetImage = function(lightbox_image) {
+    var container = lightbox.children[0]
+
+    if(container.children[1]){
+      container.children[1].remove();
+      container.insertBefore(lightbox_image, container.children[1]);
+    }
+  }
+
+  var lightboxImage = function(image) {
+    return(
+      "<div class='image-container'>\
+        <div class='left'>&#9001;</div>"
+        + image.outerHTML +
+        "<div class='close'>X</div>\
+        <div class='right'>&#9002;</div>\
+      </div>"
+    );
+  }
+
+  for (var id = 0; id < 5; id++) { 
+    addImage(id);
+  }
+
+  var images = document.getElementsByTagName('img')
+  images = Array.prototype.slice.call(images)
+
+  images.forEach(function(image){
+    image.addEventListener('click', function(){
+      displayLightbox(this);
+    });
+  })
+
+
+  var closeButton = function() {
+    var button = document.getElementsByClassName('close')[0]
+    button.addEventListener('click', function() {
+      var lightboxChildern = Array.prototype.slice.call(lightbox.children)
+
+      lightboxChildern.forEach(function(child){
+        child.remove();
+      })
+      lightbox.style.display = 'none';
+    })
+  }
+  </script>
+</body>
+</html>
